@@ -11,16 +11,22 @@ using namespace std;
 
 int main()
 {
-    // std::string dir = "./input_files";
-    // for (const auto & entry : std::filesystem::directory_iterator(dir)) {
-    //     Assembler assembler = Assembler(entry.path());
-    //     assembler.generateSymbolTable();
-    
-    // }
+    std::string dir = "./input_files";
+    for (const auto & entry : std::filesystem::directory_iterator(dir)) {
+        Assembler assembler = Assembler(entry.path());
+        string hack = assembler.assemble();
 
-    Assembler assembler = Assembler("./input_files/Max.asm");
-    string hack = assembler.assemble();
-    std::cout << hack << std::endl;
+        std::string save_path = entry.path();
+        save_path = "./created_files/" + 
+            substring_by_index(save_path, save_path.find_last_of('/') + 1, save_path.length() - 5) + 
+            ".hack";
+        std::cout << save_path << std::endl;
+        std::ofstream file(save_path);
+        if (file.is_open()) {
+            file << hack;
+            file.close();
+        }
+    }
     return 0;
 }
 
@@ -32,4 +38,7 @@ optional<std::ifstream> open_file(std::string file_path) {
     } else {
         return std::nullopt;
     }
+}
+std::string substring_by_index(std::string string, int start, int end) {
+    return string.substr(start, end - start + 1);
 }

@@ -38,11 +38,11 @@ SymbolTable::SymbolTable() {
     table = STANDARD_SYMBOLS;
 }
 void SymbolTable::addSymbol(std::string symbol, int value) {
-    this->table.insert_or_assign(symbol, value);
+    table.insert_or_assign(symbol, value);
 }
 std::optional<int> SymbolTable::retrieveSymbol(std::string symbol) {
     try{
-        return this->table.at(symbol);
+        return table.at(symbol);
     } catch (std::out_of_range e) {
         return std::nullopt;
     }

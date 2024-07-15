@@ -47,3 +47,6 @@ class Assembler {
 
 bool is_a_instruction(std::string line);
 bool is_c_instruction(std::string line);
+
+
+std::string substring_by_index(std::string string, int start, int end);
