@@ -13,19 +13,17 @@ class SymbolTable {
     public: 
         SymbolTable();
         void addSymbol(std::string symbol, int value);
-        int retrieveSymbol(std::string symbol);
+        std::optional<int> retrieveSymbol(std::string symbol);
 };
 
 class FileReader {
     std::ifstream file;
-    int instructions_read;
 
     public:
         FileReader(std::string file_path);
         ~FileReader();
-        std::optional<std::string> get_next_label();
+        std::optional<std::string> get_next_label(int& instruction_count);
         std::optional<std::string> get_next_instruction();
-        int get_instructions_read();
         void go_back_to_file_start();
     
     private:
@@ -35,6 +33,8 @@ class FileReader {
 class Assembler {
     SymbolTable symbol_table;
     FileReader file_reader;
+    int next_instruction_address;
+    int next_variable_address;
 
     public: 
         Assembler(std::string asm_file_path); 

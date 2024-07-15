@@ -47,8 +47,8 @@ bool is_c_instruction(std::string line) {
     auto first = non_space_char(line, FirstOrLast::First);
     return (
         first && 
-        !isdigit(*first) && 
-        (
+        (   
+            isdigit(*first) ||
             isalpha(*first) ||
             *first == '_' ||
             *first == '.' ||
@@ -61,7 +61,7 @@ bool is_c_instruction(std::string line) {
 
 
 //TODO: This cannot handle file_paths that are not valid
-FileReader::FileReader(std::string file_path) : instructions_read(-1) {
+FileReader::FileReader(std::string file_path) {
     file.open(file_path, std::ios::in | std::ios::out | std::ios::app);
 }
 FileReader::~FileReader() {
@@ -71,12 +71,12 @@ FileReader::~FileReader() {
 }
 
 // Reads through the file until it finds a new label and returns the line
-std::optional<std::string> FileReader::get_next_label() {
+std::optional<std::string> FileReader::get_next_label(int& instruction_count) {
     while (auto result = get_next_line()) {
         if (is_label(*result)) {
             return *result;
         } else if (is_a_instruction(*result) || is_c_instruction(*result)) {
-            instructions_read++;
+            instruction_count++;
         }
     }
     return std::nullopt;
@@ -92,10 +92,6 @@ std::optional<std::string> FileReader::get_next_instruction() {
     return std::nullopt;
 }
 
-int FileReader::get_instructions_read() {
-    return instructions_read;
-}
-
 // Returns the next non-blank line in the file
 std::optional<std::string> FileReader::get_next_line() {
     std::string next_line = "";
@@ -108,5 +104,6 @@ std::optional<std::string> FileReader::get_next_line() {
 }
 
 void FileReader::go_back_to_file_start() {
-    file.seekg(0, std::ios::beg);
+    file.clear();
+    file.seekg(0);
 }

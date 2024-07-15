@@ -19,7 +19,8 @@ int main()
     // }
 
     Assembler assembler = Assembler("./input_files/Max.asm");
-    assembler.assemble();
+    string hack = assembler.assemble();
+    std::cout << hack << std::endl;
     return 0;
 }
 

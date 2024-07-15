@@ -40,6 +40,10 @@ SymbolTable::SymbolTable() {
 void SymbolTable::addSymbol(std::string symbol, int value) {
     this->table.insert_or_assign(symbol, value);
 }
-int SymbolTable::retrieveSymbol(std::string symbol) {
-    return this->table.at(symbol);
+std::optional<int> SymbolTable::retrieveSymbol(std::string symbol) {
+    try{
+        return this->table.at(symbol);
+    } catch (std::out_of_range e) {
+        return std::nullopt;
+    }
 }
