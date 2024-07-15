@@ -1,28 +1,12 @@
 #include "header.h"
 #include <fstream>
+#include <algorithm>
 #include <optional>
 
 enum FirstOrLast {
     First,
     Last
 };
-
-std::optional<char> non_space_char(std::string line, FirstOrLast first_or_last_choice) {
-   if (first_or_last_choice == FirstOrLast::First) {
-        for (int index = 0; index < line.size(); index++) {
-            if (line.at(index) != ' ') {
-                return line.at(index);
-            }
-        }
-   } else {
-        for(int index = line.size() - 1; index >= 0; index--) {
-            if (line.at(index) != ' ') {
-                return line.at(index);
-            }
-        }
-   }
-   return std::nullopt;
-}
 
 // Returns whether or not a string is all blanks
 bool is_blank(std::string line) {
@@ -31,29 +15,29 @@ bool is_blank(std::string line) {
 
 // Returns true if the first and last non-space char in a string are ( and ) respectively
 bool is_label(std::string line) {
-   auto first = non_space_char(line, FirstOrLast::First);
-   auto last = non_space_char(line, FirstOrLast::Last);
-   return first && last && *first == '(' && *last == ')';
+   char first = line.at(0);
+   char last = line.at(line.length() - 1);
+   return first == '(' && last == ')';
 }
 
 // Returns true if the first non-space char is @
 bool is_a_instruction(std::string line) {
-    auto first = non_space_char(line, FirstOrLast::First);
-    return (first && *first == '@');
+    char first = line.at(0);
+    return first == '@';
 }
 
 // Returns true if the first char is valid for starting a symbol
 bool is_c_instruction(std::string line) {
-    auto first = non_space_char(line, FirstOrLast::First);
+    char first = line.at(0);
     return (
         first && 
         (   
-            isdigit(*first) ||
-            isalpha(*first) ||
-            *first == '_' ||
-            *first == '.' ||
-            *first == '$' ||
-            *first == ':'
+            isdigit(first) ||
+            isalpha(first) ||
+            first == '_' ||
+            first == '.' ||
+            first == '$' ||
+            first == ':'
         )
     );
 }
@@ -85,8 +69,10 @@ std::optional<std::string> FileReader::get_next_label(int& instruction_count) {
 // Reads through the file until it finds either an A or C instruction and returns the line
 std::optional<std::string> FileReader::get_next_instruction() {
     while (auto result = get_next_line()) {
-        if (is_a_instruction(*result) || is_c_instruction(*result)) {
-            return *result;
+        std::string next_line = result.value();
+        next_line.erase(remove(next_line.begin(), next_line.end(), ' '), next_line.end());
+        if (is_a_instruction(next_line) || is_c_instruction(next_line)) {
+            return next_line;
         }
     }
     return std::nullopt;
@@ -97,6 +83,7 @@ std::optional<std::string> FileReader::get_next_line() {
     std::string next_line = "";
     while (std::getline(this->file, next_line)) {
         if (!is_blank(next_line)) {
+            next_line.erase(remove(next_line.begin(), next_line.end(), ' '), next_line.end());
             return next_line;
         }
     }
