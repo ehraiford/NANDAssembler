@@ -34,17 +34,12 @@ std::unordered_map<std::string, int> STANDARD_SYMBOLS = {
     
 };
 
-class SymbolTable {
-    std::unordered_map<std::string, int> table; 
-
-    public: 
-        SymbolTable() {
-            table = STANDARD_SYMBOLS;
-        }
-        void addSymbol(std::string symbol, int value) {
-            this->table.insert_or_assign(symbol, value);
-        }
-        int retrieveSymbol(std::string symbol) {
-            return this->table.at(symbol);
-        }
-};
+SymbolTable::SymbolTable() {
+    table = STANDARD_SYMBOLS;
+}
+void SymbolTable::addSymbol(std::string symbol, int value) {
+    this->table.insert_or_assign(symbol, value);
+}
+int SymbolTable::retrieveSymbol(std::string symbol) {
+    return this->table.at(symbol);
+}

@@ -11,14 +11,15 @@ using namespace std;
 
 int main()
 {
-    std::string dir = "./input_files";
-    for (const auto & entry : std::filesystem::directory_iterator(dir)) {
-        Assembler assembler = Assembler(entry.path());
-        assembler.generate_symbol_table();
-        
+    // std::string dir = "./input_files";
+    // for (const auto & entry : std::filesystem::directory_iterator(dir)) {
+    //     Assembler assembler = Assembler(entry.path());
+    //     assembler.generateSymbolTable();
+    
+    // }
 
-        
-    }
+    Assembler assembler = Assembler("./input_files/Max.asm");
+    assembler.assemble();
     return 0;
 }
 
