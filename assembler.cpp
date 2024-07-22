@@ -7,12 +7,12 @@ std::string translate_dest(std::string line) {
         return "001";
     } else if (line == "D") {
         return "010";
-    } else if (line == "DM") {
+    } else if (line == "DM" || line == "MD") {
         return "011";
     } else if (line == "A") {
         return "100";
     } else if (line == "AM") {
-        return "1010";
+        return "101";
     } else if (line == "AD") {
         return "110";
     } else {
@@ -112,7 +112,7 @@ std::string translate_comp(std::string line, char* a_reg) {
 Assembler::Assembler(std::string asm_file_path) : 
     file_reader(asm_file_path), 
     next_instruction_address(0),
-    next_variable_address(15),
+    next_variable_address(16),
     symbol_table()              
 {}
 
@@ -120,7 +120,7 @@ Assembler::Assembler(std::string asm_file_path) :
 void Assembler::generateSymbolTable() {
     while (auto line = file_reader.get_next_label(next_instruction_address)) {
         std::string symbol = line.value();
-        symbol = substring_by_index(symbol, 1, symbol.length() - 2);
+        symbol = substring_by_index(symbol, 1, symbol.length() - 1);
         symbol_table.addSymbol(symbol, next_instruction_address);
     }
     file_reader.go_back_to_file_start();

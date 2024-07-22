@@ -18,12 +18,12 @@ int main()
 
         std::string save_path = entry.path();
         save_path = "./created_files/" + 
-            substring_by_index(save_path, save_path.find_last_of('/') + 1, save_path.length() - 5) + 
+            substring_by_index(save_path, save_path.find_last_of('/') + 1, save_path.length() - 4) + 
             ".hack";
         std::cout << save_path << std::endl;
         std::ofstream file(save_path);
         if (file.is_open()) {
-            file << hack;
+            file << hack.substr(0, hack.length() - 1);
             file.close();
         }
     }
@@ -40,5 +40,5 @@ optional<std::ifstream> open_file(std::string file_path) {
     }
 }
 std::string substring_by_index(std::string string, int start, int end) {
-    return string.substr(start, end - start + 1);
+    return string.substr(start, end - start);
 }
